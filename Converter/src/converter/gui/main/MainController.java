@@ -1,90 +1,189 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package converter.gui.main;
 
 import javax.annotation.PostConstruct;
 
-import com.jfoenix.controls.JFXDrawer;
-import com.jfoenix.controls.JFXHamburger;
-import com.jfoenix.controls.JFXPopup;
-import com.jfoenix.controls.JFXPopup.PopupHPosition;
-import com.jfoenix.controls.JFXPopup.PopupVPosition;
-import com.jfoenix.controls.JFXRippler;
-
 import io.datafx.controller.FXMLController;
-import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowException;
-import io.datafx.controller.flow.FlowHandler;
-import io.datafx.controller.flow.container.ContainerAnimations;
-import io.datafx.controller.flow.context.FXMLViewFlowContext;
-import io.datafx.controller.flow.context.ViewFlowContext;
 import io.datafx.controller.util.VetoException;
-import javafx.application.Platform;
+
+import javafx.scene.layout.StackPane;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
 
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialog.DialogTransition;
 
+import converter.UnitTypes;
+import converter.converters.*;
 
-@FXMLController(value = "/resources/fxml/Main.fxml", title = "Material Design Example")
+@FXMLController(value = "/resources/fxml/Main.fxml", title = "Converter v1.0")
 public class MainController {
 
-    @FXMLViewFlowContext
-    private ViewFlowContext context;
+    @FXML
+    private StackPane root, mainbody;
 
     @FXML
-    private StackPane root;
+    private JFXComboBox types, inputType, outputType;
 
     @FXML
-    private StackPane titleBurgerContainer;
-    @FXML
-    private JFXHamburger titleBurger;
+    private JFXTextField inputText, outputText;
 
     @FXML
-    private StackPane optionsBurger;
-    @FXML
-    private JFXRippler optionsRippler;
+    private JFXButton convert, swap, clear, about, ok;
 
     @FXML
-    private JFXDrawer drawer;
-    @FXML
-    private JFXPopup toolbarPopup;
-    @FXML
-    private Label exit;
-
-    private FlowHandler flowHandler;
-    private FlowHandler sideMenuFlowHandler;
+    private JFXDialog dialog;
 
     @PostConstruct
     public void init() throws FlowException, VetoException {
-        // init Popup 
-        toolbarPopup.setPopupContainer(root);
-        toolbarPopup.setSource(optionsRippler);
-        root.getChildren().remove(toolbarPopup);
+        root.getChildren().remove(dialog);
 
-        // close application
-        exit.setOnMouseClicked((e) -> {
-            Platform.exit();
+        // init the types combo
+        for (String type : UnitTypes.types) {
+            types.getItems().add(new Label(type));
+        }
+
+        // on changing conversion type
+        types.setOnAction((e) -> {
+            // remove all children of inputTypes and outoutTypes if present
+            inputType.getItems().clear();
+            outputType.getItems().clear();
+            // add new items according to the current selection index
+            for (String unit : UnitTypes.units[types.getSelectionModel().getSelectedIndex()]) {
+                inputType.getItems().add(new Label(unit));
+                outputType.getItems().add(new Label(unit));
+            }
         });
 
-        // create the inner flow and content
-        context = new ViewFlowContext();
-        // set the default controller 
-//        Flow innerFlow = new Flow(ButtonController.class);
-//
-//        flowHandler = innerFlow.createHandler(context);
-//        context.register("ContentFlowHandler", flowHandler);
-//        context.register("ContentFlow", innerFlow);
-//        drawer.setContent(flowHandler.start(new AnimatedFlowContainer(Duration.millis(320), ContainerAnimations.SWIPE_LEFT)));
-//        context.register("ContentPane", drawer.getContent().get(0));
-//
-//        // side controller will add links to the content flow
-//        Flow sideMenuFlow = new Flow(SideMenuController.class);
-//        sideMenuFlowHandler = sideMenuFlow.createHandler(context);
-//        drawer.setSidePane(sideMenuFlowHandler.start(new AnimatedFlowContainer(Duration.millis(320), ContainerAnimations.SWIPE_LEFT)));
+        // validate input and output
+        inputText.focusedProperty().addListener((o, oldVal, newVal) -> {
+            inputText.validate();
+        });
+
+        // convert input to output
+        convert.setOnMouseClicked((e) -> {
+            Double inputData = 0.0,
+                    outputData = 0.0;
+            try {
+                inputData = Double.parseDouble(inputText.getText());
+            } catch (NumberFormatException err) {
+                inputText.validate();
+            } finally {
+                if (inputData != 0.0) {
+                    int type1 = 0,
+                            type2 = 0,
+                            unitofType = types.getSelectionModel().getSelectedIndex(),
+                            from = inputType.getSelectionModel().getSelectedIndex(),
+                            to = outputType.getSelectionModel().getSelectedIndex();
+                    switch (unitofType) {
+                        case 0:
+                            if (from > 2) {
+                                type1 = 1;
+                                from -= 3;
+                            }
+                            if (to > 2) {
+                                type2 = 1;
+                                to -= 3;
+                            }
+                            Area a = new Area(from, to, type1, type2, inputData);
+                            outputData = a.convert();
+                            break;
+                        case 1:
+                            if (from > 4) {
+                                type1 = 1;
+                                from -= 5;
+                            }
+                            if (to > 4) {
+                                type2 = 1;
+                                to -= 5;
+                            }
+                            DataTransferRate dtr = new DataTransferRate(from, to, type1, type2, inputData);
+                            outputData = dtr.convert();
+                            break;
+                        case 2:
+                            if (from > 5) {
+                                type1 = 1;
+                                from -= 6;
+                            }
+                            if (to > 5) {
+                                type2 = 1;
+                                to -= 6;
+                            }
+                            DigitalStorage ds = new DigitalStorage(from, to, type1, type2, inputData);
+                            outputData = ds.convert();
+                            break;
+                        case 3:
+                            Frequency f = new Frequency(from, to, inputData);
+                            outputData = f.convert();
+                            break;
+                        case 4:
+                            if (from > 5) {
+                                type1 = 1;
+                                from -= 6;
+                            }
+                            if (to > 5) {
+                                type2 = 1;
+                                to -= 6;
+                            }
+                            Length l = new Length(from, to, type1, type2, inputData);
+                            outputData = l.convert();
+                            break;
+                        case 5:
+                            Temperature t = new Temperature(from, to, inputData);
+                            outputData = t.convert();
+                            break;
+                        case 6:
+                            if (from > 2) {
+                                type1 = 1;
+                                from -= 3;
+                            }
+                            if (to > 2) {
+                                type2 = 1;
+                                to -= 3;
+                            }
+                            Volume v = new Volume(from, to, type1, type2, inputData);
+                            outputData = v.convert();
+                            break;
+                        default:
+                    }
+                    outputText.setText(outputData.toString());
+                }
+            }
+        });
+
+        // swap units if swapable
+        swap.setOnMouseClicked((e) -> {
+            // check if the selected conversion type is in a valid state
+            if (types.getSelectionModel().getSelectedIndex() > -1) {
+                int from = inputType.getSelectionModel().getSelectedIndex(),
+                        to = outputType.getSelectionModel().getSelectedIndex();
+                from += to;
+                to = from - to;
+                from -= to;
+                // now set them
+                inputType.getSelectionModel().select(from);
+                outputType.getSelectionModel().select(to);
+            }
+        });
+
+        // clear input and output
+        clear.setOnMouseClicked((e) -> {
+            inputText.clear();
+            outputText.clear();
+        });
+
+        // show about us dialog
+        about.setOnMouseClicked((e) -> {
+            dialog.setTransitionType(DialogTransition.CENTER);
+//            dialog.show((StackPane) context.getRegisteredObject("ContentPane"));
+        });
+
+        // hide about us dialog
+        ok.setOnMouseClicked((e) -> {
+            dialog.close();
+        });
     }
 }

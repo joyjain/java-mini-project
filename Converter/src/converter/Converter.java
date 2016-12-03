@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package converter;
 
 /**
@@ -53,12 +48,12 @@ public class Converter extends Application {
 
         JFXDecorator decorator = new JFXDecorator(stage, container.getView());
         decorator.setCustomMaximize(true);
-        Scene scene = new Scene(decorator, 500, 500);
+        Scene scene = new Scene(decorator, 600, 500);
         scene.getStylesheets().add(Converter.class.getResource("/resources/css/jfoenix-fonts.css").toExternalForm());
         scene.getStylesheets().add(Converter.class.getResource("/resources/css/jfoenix-design.css").toExternalForm());
         scene.getStylesheets().add(Converter.class.getResource("/resources/css/jfoenix-main-demo.css").toExternalForm());
 
-        stage.setTitle("Sukwinder");
+        stage.setTitle("Converter v1.0");
         stage.setScene(scene);
         stage.show();
     }
