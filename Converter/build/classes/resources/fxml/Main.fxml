@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.StackPane?>
+
+<?import de.jensd.fx.fontawesome.AwesomeIcon?>
+<?import de.jensd.fx.fontawesome.AwesomeIconsStack?>
+<?import de.jensd.fx.fontawesome.Icon?>
+
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+
+<?import com.jfoenix.controls.JFXToolbar?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXRippler?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDialog?>
+<?import com.jfoenix.controls.JFXDialogLayout?>
+
+<?import converter.gui.main.CustomValidator?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.geometry.Insets?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/2.2">
+    <BorderPane>   
+        <top>
+            <VBox spacing="20">
+                <JFXToolbar>
+                    <leftItems>
+                        <Label>Converter v1.0</Label>
+                    </leftItems>
+                </JFXToolbar>
+            </VBox>
+        </top>
+        <center>
+            <StackPane id="mainbody" xmlns:fx="http://javafx.com/fxml/1"
+                       xmlns="http://javafx.com/javafx/2.2">
+                <VBox spacing="20" alignment="CENTER">
+                    <JFXComboBox id="types" promptText="Choose a Conversion">
+                    </JFXComboBox>
+                    <HBox spacing="20" alignment="CENTER">
+                        <JFXTextField maxWidth="50" id="inputText" promptText="Input Unit">
+                            <validators>
+                                <CustomValidator id="inputTextValidator" message="Please enter a number only!">
+                                    <Icon awesomeIcon="WARNING" style="-fx-font-family: FontAwesome;" />
+                                </CustomValidator>
+                            </validators>
+                        </JFXTextField>
+                        <Label style="-fx-text-fill:#5264AE;-fx-font-size:26px;">=</Label>
+                        <JFXTextField id="outputText" promptText="Output Unit"></JFXTextField>                                      
+                        <VBox.margin>
+                            <Insets>
+                                <left>25</left>
+                                <right>25</right>
+                            </Insets>
+                        </VBox.margin>
+                    </HBox>                    
+                    <HBox spacing="40" alignment="CENTER">
+                        <JFXComboBox minWidth="150" id="inputType" promptText="Input Unit">
+                        </JFXComboBox>
+                        <JFXComboBox minWidth="150" id="outputType" promptText="Output Unit">
+                        </JFXComboBox>
+                    </HBox>
+                    <HBox spacing="20" alignment="CENTER">
+                        <JFXButton id="convert" buttonType="RAISED" prefWidth="120" text="Convert" style="-fx-text-fill:WHITE;-fx-background-color:#5264AE;-fx-font-size:14px;">                        
+                            <HBox.margin>
+                                <Insets>
+                                    <top>15</top>
+                                </Insets>
+                            </HBox.margin>
+                        </JFXButton>                        
+                        <JFXButton id="swap" buttonType="RAISED" prefWidth="120" text="Swap" style="-fx-text-fill:WHITE;-fx-background-color:#4CAF50;-fx-font-size:14px;">                            
+                            <HBox.margin>
+                                <Insets>
+                                    <top>15</top>
+                                </Insets>
+                            </HBox.margin>
+                        </JFXButton>
+                        <JFXButton id="clear" buttonType="RAISED" prefWidth="120" text="Clear" style="-fx-text-fill:WHITE;-fx-background-color:#F44336;-fx-font-size:14px;">                            
+                            <HBox.margin>
+                                <Insets>
+                                    <top>15</top>
+                                </Insets>
+                            </HBox.margin>
+                        </JFXButton>                        
+                        <JFXButton id="about" buttonType="RAISED" prefWidth="120" text="About" style="-fx-text-fill:WHITE;-fx-background-color:#5264AE;-fx-font-size:14px;">                        
+                            <HBox.margin>
+                                <Insets>
+                                    <top>15</top>
+                                </Insets>
+                            </HBox.margin>
+                        </JFXButton>  
+                    </HBox>      
+                    <StackPane.margin>
+                        <Insets>
+                            <top>-160</top>
+                        </Insets>
+                    </StackPane.margin>                    
+                </VBox>                
+            </StackPane>
+        </center>
+    </BorderPane>
+    <JFXDialog id="dialog">
+        <JFXDialogLayout>
+            <heading>
+                <Label>Thanks for using!</Label>
+            </heading>
+            <body>
+                <Label>
+                    This Project was built by Joy Jain and Jayesh
+                    Using Java 8, Javafxml 2.0 and Jfoenix material design theme
+                    On the Netbeans IDE 2.0 and Atom 1.x
+                    Also this project requires a minimum of JRE 8u60
+                </Label>
+            </body>
+            <actions>
+                <JFXButton id="ok" styleClass="dialog-accept">ACCEPT
+                </JFXButton>
+            </actions>
+        </JFXDialogLayout>
+    </JFXDialog>
+</StackPane>
