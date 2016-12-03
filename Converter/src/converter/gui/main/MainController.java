@@ -5,6 +5,8 @@ import javax.annotation.PostConstruct;
 import io.datafx.controller.FXMLController;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.util.VetoException;
+import io.datafx.controller.flow.context.FXMLViewFlowContext;
+import io.datafx.controller.flow.context.ViewFlowContext;
 
 import javafx.scene.layout.StackPane;
 import javafx.fxml.FXML;
@@ -21,6 +23,9 @@ import converter.converters.*;
 
 @FXMLController(value = "/resources/fxml/Main.fxml", title = "Converter v1.0")
 public class MainController {
+
+    @FXMLViewFlowContext
+    private ViewFlowContext context;
 
     @FXML
     private StackPane root, mainbody;
@@ -178,7 +183,7 @@ public class MainController {
         // show about us dialog
         about.setOnMouseClicked((e) -> {
             dialog.setTransitionType(DialogTransition.CENTER);
-//            dialog.show((StackPane) context.getRegisteredObject("ContentPane"));
+            dialog.show(mainbody);
         });
 
         // hide about us dialog
