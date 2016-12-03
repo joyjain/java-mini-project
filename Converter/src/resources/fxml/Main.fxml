@@ -72,10 +72,10 @@
                             </Insets>
                         </VBox.margin>
                     </HBox>                    
-                    <HBox spacing="60" alignment="CENTER">
-                        <JFXComboBox id="inputType" promptText="Input Unit">
+                    <HBox spacing="40" alignment="CENTER">
+                        <JFXComboBox minWidth="150" id="inputType" promptText="Input Unit">
                         </JFXComboBox>
-                        <JFXComboBox id="outputType" promptText="Output Unit">
+                        <JFXComboBox minWidth="150" id="outputType" promptText="Output Unit">
                         </JFXComboBox>
                     </HBox>
                     <HBox spacing="20" alignment="CENTER">
